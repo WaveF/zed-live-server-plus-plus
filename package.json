@@ -1,0 +1,13 @@
+{
+  "name": "zed-live-server-plus-plus",
+  "private": true,
+  "description": "Tests for the Live Server++ Zed extension's Node.js server (no runtime dependencies).",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "build": "cargo build --release --target wasm32-wasip2"
+  }
+}

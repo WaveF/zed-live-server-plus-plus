@@ -1,0 +1,11 @@
+id = "live-server-plus-plus"
+name = "Live Server++"
+version = "0.1.0"
+schema_version = 1
+authors = ["WaveF <wavef@live.com>"]
+description = "Truly live preview for HTML/CSS/JS: updates the browser as you type, without saving and without full page reloads."
+repository = "https://gitee.com/wavef/zed-live-server-plus-plus"
+
+[language_servers.live-server-plus-plus]
+name = "Live Server++"
+languages = ["HTML", "CSS", "JavaScript"]
