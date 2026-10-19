@@ -92,7 +92,25 @@ Zed 扩展运行在 WebAssembly 沙箱中，不能直接监听端口或订阅编
 - `server/client.js`：注入到每个 HTML 页面的脚本，负责接收更新：DOM 原地修补（按 `id` 匹配移动节点、向前查找处理插入/删除）、样式表无闪烁替换、必要时整页刷新。
 - 打开浏览器默认通过 LSP 的 `window/showDocument` 交给 Zed 处理；指定浏览器时直接启动对应程序。
 
-## 局限
+## 注意事项
+
+### 安装时提示 `Failed to install dev extension: compiling Rust extension`
+
+Zed 编译扩展时直接调用 `PATH` 中的 `cargo` / `rustc`。如果同时装了 **Homebrew 的 Rust**（`brew install rust`）和 **rustup**，且 `/opt/homebrew/bin` 排在 `~/.cargo/bin` 前面，Zed 会用 Homebrew 的工具链。它没有 `wasm32-wasip2` target，也无法补装，日志（`zed: open log`）中会看到：
+
+```
+error[E0463]: can't find crate for `core`
+  = note: the `wasm32-wasip2` target may not be installed
+```
+
+先用 `which -a cargo rustc` 确认实际用的是哪一个，然后二选一：
+
+1. **卸载 Homebrew 的 Rust（推荐）**：`brew uninstall rust`（可先用 `brew uses --installed rust` 确认没有其它包依赖它）；
+2. **调整 PATH 顺序**：在 `~/.zshrc` **末尾**加入 `export PATH="$HOME/.cargo/bin:$PATH"`。
+
+之后**完全退出 Zed（`Cmd + Q`）再重新打开**（Zed 只在启动时读取一次 shell 环境），用 `which cargo rustc` 确认指向 `~/.cargo/bin`，再重新 Install Dev Extension。
+
+### 使用上的局限
 
 与原版一样：如果页面大量依赖 JavaScript 动态修改 DOM，`hot` 策略可能会覆盖脚本对 DOM 的改动，此时建议使用 `"reloadingStrategy": "reload"`。
 
